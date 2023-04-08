@@ -1,3 +1,5 @@
+import datetime
+
 from django.db import models
 from django.db.models import signals
 from django.contrib.auth import models as auth_models
@@ -32,3 +34,28 @@ class SiteSettings(models.Model):
     """Site-specific configuration which applies to all users."""
     # Theme, selected by setting a different CSS file for web templates.
     default_theme = models.CharField(max_length=100)
+
+
+class Tags(models.Model):
+    tag_name = models.CharField(max_length=40)
+
+
+class Comment(models.Model):
+    commenter = models.ForeignKey(
+        to=auth_models.User, on_delete=models.CASCADE)
+    comment_text = models.CharField(max_length=1000)
+
+
+class Story(models.Model):
+    author = models.ForeignKey(auth_models.User, on_delete=models.CASCADE)
+    title = models.CharField(max_length=200, null=False)
+    published = models.DateTimeField(
+        null=False, default=datetime.datetime.utcnow)
+    last_update = models.DateTimeField(
+        null=False, default=datetime.datetime.utcnow)
+    # TODO: optional cover image
+    description = models.CharField(max_length=2000, null=False)
+    tags = models.ManyToManyField(to=Tags)
+    comments = models.ManyToManyField(to=Comment)
+    likes = models.PositiveIntegerField(default=0)
+    dislikes = models.PositiveIntegerField(default=0)
