@@ -59,3 +59,4 @@ class Story(models.Model):
     comments = models.ManyToManyField(to=Comment)
     likes = models.PositiveIntegerField(default=0)
     dislikes = models.PositiveIntegerField(default=0)
+    draft = models.BooleanField(default=True)
