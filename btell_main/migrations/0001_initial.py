@@ -5,6 +5,7 @@ from django.db import migrations, models
 import django.db.models.deletion
 from django.contrib import auth
 from django.contrib.auth import models as auth_models
+from btell_main.util import user_util
 
 
 def create_superuser_forward(apps, schema_editor):
@@ -18,20 +19,15 @@ def create_superuser_forward(apps, schema_editor):
     )  # type: ignore
     if isinstance(admin, User):
         admin: auth_models.User = admin
-        # TODO: Randomly generate password here
-        generated_password = 'hunter2'
+        generated_password = user_util.generate_random_password(
+            settings.MIN_PASSWORD_LENGTH)
         admin.set_password(generated_password)
         admin.is_staff = True
         admin.is_superuser = True
         admin.save()
-        # Profile = apps.get_model('btell_main', 'BTellProfile')
-        # Profile.objects.using(db_alias).create(
-        #     user=admin,
-        #     theme='DEFAULT',
-        # )
         print(
-            f"Generated admin user 'admin' with password '{generated_password}")
-        print('Please change this password at your earliest convenience.')
+            f"\n\n  - Generated admin user 'admin' with password '{generated_password}")
+        print('  - Please change this password at your earliest convenience.\n\n')
     else:
         raise TypeError(
             f"Was expecting the default user model, not '{type(User)}'.")
