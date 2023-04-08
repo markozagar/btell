@@ -1,3 +1,34 @@
 from django.db import models
+from django.db.models import signals
+from django.contrib.auth import models as auth_models
+from django import dispatch
+
 
 # Create your models here.
+
+
+class Profile(models.Model):
+    """Extension to the basic User model which adds some more fields we use in BTell."""
+    user = models.OneToOneField(auth_models.User, on_delete=models.CASCADE)
+    # We will default this to the string 'DEFAULT', which implies we should pick from
+    # whatever the site-administrator has configured as the default theme.
+    theme = models.CharField(verbose_name='website_theme',
+                             max_length=100, default='DEFAULT')
+
+    @dispatch.receiver(signals.post_save, sender=auth_models.User)
+    def create_user_profile(sender: 'Profile', instance: auth_models.User, created: bool, **kwargs):
+        if created:
+            Profile.objects.create(user=instance)
+
+    @dispatch.receiver(signals.post_save, sender=auth_models.User)
+    def save_user_profile(sender: 'Profile', instance: auth_models.User, **kwargs):
+        instance.profile.save()  # type: ignore
+
+    def __str__(self):
+        return f'Profile ({self.user.username})'
+
+
+class SiteSettings(models.Model):
+    """Site-specific configuration which applies to all users."""
+    # Theme, selected by setting a different CSS file for web templates.
+    default_theme = models.CharField(max_length=100)
