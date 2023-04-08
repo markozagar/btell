@@ -21,6 +21,8 @@ def create_superuser_forward(apps, schema_editor):
         admin: auth_models.User = admin
         generated_password = user_util.generate_random_password(
             settings.MIN_PASSWORD_LENGTH)
+        if settings.DEBUG:
+            generated_password = "admin"
         admin.set_password(generated_password)
         admin.is_staff = True
         admin.is_superuser = True
