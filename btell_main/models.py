@@ -53,7 +53,10 @@ class Story(models.Model):
         null=False, default=datetime.datetime.utcnow)
     last_update = models.DateTimeField(
         null=False, default=datetime.datetime.utcnow)
-    # TODO: optional cover image
+    # Cover image file will be a sha256 hash (hex) from a specified uploads directory.
+    cover_image_file = models.CharField(max_length=32, null=True)
+    # A link to where the cover image is from, if applicable.
+    cover_image_source = models.CharField(max_length=500, null=True)
     description = models.CharField(max_length=2000, null=False)
     tags = models.ManyToManyField(to=Tags)
     comments = models.ManyToManyField(to=Comment)
