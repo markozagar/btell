@@ -1,1 +1,22 @@
-Default header text
+{% load static %}
+<div class="container">
+    <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+        <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+            <img class="bi me-2" src="{% static 'btell_main/img/btell_logo.png' %}" width="40" />
+            <p class="fs-4">Branching storyteller</p>
+        </a>
+
+        <ul class="nav nav-pills">
+            <li class="nav-item"><a href="#" class="nav-link active">Home</a></li>
+            <li class="nav-item"><a href="#" class="nav-link">Stories</a></li>
+            <li class="nav-item"><a href="#" class="nav-link">About</a></li>
+            <!-- TODO: If already logged-in, this should instead show the logout button. -->
+            <li class="nav-item"><a href="#"><button class="btn btn-outline-primary me-2"
+                        type="button">Login</button></a>
+            </li>
+            <li class="nav-item"><a href="#"><button class="btn btn-primary" type="button">Sign-up</button></a>
+            </li>
+
+        </ul>
+    </header>
+</div>

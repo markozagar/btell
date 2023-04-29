@@ -2,7 +2,7 @@
 {% load sass_tags %}
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-100" data-bs-theme="light">
 
 <head>
     <meta charset="utf-8">
@@ -13,10 +13,10 @@
     <title>{% block page_title %} BTell {% endblock %}</title>
 </head>
 
-<body>
-    <header>{% block header %} {% include "btell_main/default_header.html" %} {% endblock %}</header>
-    <main>{% block main %} {% endblock %}</main>
-    <footer>{% block footer %} {% include "btell_main/default_footer.html" %} {% endblock %}</footer>
+<body class="d-flex flex-column h-100">
+    {% block header %} {% include "btell_main/default_header.html" %} {% endblock %}
+    {% block main %} {% endblock %}
+    {% block footer %} {% include "btell_main/default_footer.html" %} {% endblock %}
 </body>
 
 </html>
