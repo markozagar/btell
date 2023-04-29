@@ -1,20 +1,8 @@
-{% load static %}
-{% load sass_tags %}
+{% extends "btell_main/frame.html" %}
 
-<!DOCTYPE html>
-<html lang="en">
+{% block page_title %} Branching Stories {% endblock %}
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" context="width=device-width, initial-scale=1">
-    <title>BTell - Branching Storyteller</title>
-    <link href="{% sass_src 'btell_main/scss/bootstrap.scss' %}" rel="stylesheet" type="text/css" />
-    <script src="{% static 'btell_main/js/bootstrap.bundle.js' %}"></script>
-</head>
 
-<body>
-    <h1>Hello, world!</h1>
-
-</body>
-
-</html>
+{% block main %}
+<h1>Hello world!</h1>
+{% endblock %}

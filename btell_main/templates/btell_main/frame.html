@@ -1,0 +1,22 @@
+{% load static %}
+{% load sass_tags %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" context="width=device-width, initial-scale=1">
+    <link href="{% sass_src 'btell_main/scss/bootstrap.scss' %}" rel="stylesheet" type="text/css" />
+    <script src="{% static 'btell_main/js/bootstrap.bundle.js' %}"></script>
+
+    <title>{% block page_title %} BTell {% endblock %}</title>
+</head>
+
+<body>
+    <header>{% block header %} {% include "btell_main/default_header.html" %} {% endblock %}</header>
+    <main>{% block main %} {% endblock %}</main>
+    <footer>{% block footer %} {% include "btell_main/default_footer.html" %} {% endblock %}</footer>
+</body>
+
+</html>
