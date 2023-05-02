@@ -1,12 +1,115 @@
-{% extends "btell_main/frame.html" %}
-
-{% block page_title %} Branching Stories {% endblock %}
-
-
-{% block main %}
+{% extends "btell_main/frame.html" %} {% block page_title %} Branching Stories {% endblock %} {% block main %}
 <main class="flex-shrink-0">
     <div class="container">
         <h1>Hello world!</h1>
+        <h1>News!</h1>
+        <div class="container-fluid py-4">
+            <div class="row">
+                <div class="col-lg-9 ps-0"><div class="bg-light border">NEWS</div></div>
+                <div class="col-lg-3 pe-0"><div class="bg-light border">LOGIN</div></div>
+                <div class="col-lg-9 ps-0">
+                    <div class="bg-light border">
+                        <div class="m-2">One more header if you need one</div>
+                        <!-- For loop through all the news you have starts here -->
+                        <!-- This is to be made cute when we have something to show -->
+                        <div class="ps-2 pt-3 pe-1">
+                            <div class="pt-3">This is the first news header about the first news header.</div>
+                            <div class="pt-3">This here is the very first explanation of the first news header being about the first news header and not the explanation of the fight news header that's a news header and not an explanation of the news header that's an explanation of the news header, which is not, in this case, an explanation of a news header not being a news header, unless it is a news header about an explanation of a news header being a news header explanation. Which it's not.</div>
+                        </div>
+                        <!-- End forloop -->
+                    </div>
+                </div>
+                <div class="col-lg-3 pe-0">
+                    <div class="bg-light border">
+                        <div class="container">
+                            <div class="row p-2">
+                                <div class="col-lg-6 pe-1 ps-0">
+                                    <button name="login-btn" class="w-100 btn btn-primary" type="button" onclick="click_and_hide(this)">Login</button>
+                                </div>
+                                <div class="col-lg-6 pe-0 ps-1">
+                                    <button name="register-btn" class="w-100 btn btn-outline-primary" type="button" onclick="click_and_hide(this)">Register</button>
+                                </div>
+                            </div>
+                        </div>
+                        <form name="login-container" class="p-2">
+                            <div class="form-group mt-1">
+                                <label for="exampleInputLogin1">Login</label>
+                                <input type="text" class="form-control" id="exampleInputLogin1" placeholder="Login" />
+                            </div>
+                            <div class="form-group mt-3">
+                                <label for="exampleInputPassword1">Password</label>
+                                <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" />
+                            </div>
+                            <button type="submit" class="btn btn-primary mt-3">Log me in!</button>
+                        </form>
+                        <form name="register-container" class="p-2 d-none">
+                            <div class="form-group mt-1">
+                                <label for="exampleInputLogin1">Login</label>
+                                <input type="text" class="form-control" id="exampleInputLogin1" placeholder="Login" />
+                            </div>
+                            <div class="form-group mt-3">
+                                <label for="exampleInputPassword1">Password</label>
+                                <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" />
+                            </div>
+                            <div class="form-group mt-3">
+                                <label for="exampleInputEmail1">Email address</label>
+                                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" />
+                                <small id="emailHelp" class="form-text text-muted">We won't share your e-mail with anyone else.</small>
+                            </div>
+                            <div class="form-check mt-3">
+                                <input type="checkbox" class="form-check-input" id="exampleCheck1" />
+                                <label class="form-check-label" for="exampleCheck1">I for one welcome our new overlords.</label>
+                            </div>
+                            <button type="submit" class="btn btn-primary mt-4">Register me!</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <css> . </css>
+    <script>
+        function display_none(item) {
+            item.classList.add("d-none")
+        }
+
+        function display_block(item) {
+            item.classList.remove("d-none")
+        }
+
+        function primary_button(item) {
+            item.classList.remove("btn-outline-primary")
+            item.classList.add("btn-primary")
+        }
+
+        function secondary_button(item) {
+            item.classList.remove("btn-primary")
+            item.classList.add("btn-outline-primary")
+        }
+
+        function click_and_hide(yolo) {
+            const login_btn = document.querySelectorAll("[name=login-btn]")
+            const register_btn = document.querySelectorAll("[name=register-btn]")
+
+            const login_container = document.querySelectorAll("[name=login-container]")
+            const register_container = document.querySelectorAll("[name=register-container]")
+            console.log(yolo)
+            if (yolo === login_btn[0]) {
+                login_btn.forEach(primary_button)
+                register_btn.forEach(secondary_button)
+                console.log("LOGIN")
+                login_container.forEach(display_block)
+                register_container.forEach(display_none)
+            }
+            if (yolo === register_btn[0]) {
+                login_btn.forEach(secondary_button)
+                register_btn.forEach(primary_button)
+                console.log("REGISTER")
+                login_container.forEach(display_none)
+                register_container.forEach(display_block)
+            }
+        }
+    </script>
 </main>
 {% endblock %}
