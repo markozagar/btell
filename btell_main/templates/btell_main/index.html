@@ -5,8 +5,8 @@
         <h1>News!</h1>
         <div class="container-fluid py-4">
             <div class="row">
-                <div class="col-lg-9 ps-0"><div class="bg-light border">NEWS</div></div>
-                <div class="col-lg-3 pe-0"><div class="bg-light border">LOGIN</div></div>
+                <!-- <div class="col-lg-9 ps-0"><div class="bg-light border">NEWS</div></div>
+                <div class="col-lg-3 pe-0"><div class="bg-light border">LOGIN</div></div> -->
                 <div class="col-lg-9 ps-0">
                     <div class="bg-light border">
                         <div class="m-2">One more header if you need one</div>
@@ -21,6 +21,18 @@
                 </div>
                 <div class="col-lg-3 pe-0">
                     <div class="bg-light border">
+                        {% if user.is_authenticated %}
+                        <div class="container m-2">Hello, [name here].</div>
+                        <div class="container">
+                            <div class="row p-2">
+                                <form class="col-lg-6 pe-1 ps-0" method="POST">
+                                    {% csrf_token %}
+                                    <button name="log-out-btn" class="w-100 btn btn-primary" type="submit">Log out</button>
+                                    <input type="hidden" name="do what" value="log out" />
+                                </form>
+                            </div>
+                        </div>
+                        {% else %}
                         <div class="container">
                             <div class="row p-2">
                                 <div class="col-lg-6 pe-1 ps-0">
@@ -31,37 +43,46 @@
                                 </div>
                             </div>
                         </div>
-                        <form name="login-container" class="p-2">
+                        <form name="login-container" class="p-2" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="do what" value="log in" />
                             <div class="form-group mt-1">
                                 <label for="exampleInputLogin1">Login</label>
-                                <input type="text" class="form-control" id="exampleInputLogin1" placeholder="Login" />
+                                <input type="text" class="form-control" id="exampleInputLogin1" name="name" placeholder="Login" />
                             </div>
                             <div class="form-group mt-3">
                                 <label for="exampleInputPassword1">Password</label>
-                                <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" />
+                                <input type="password" class="form-control" id="exampleInputPassword1" name="password" placeholder="Password" />
                             </div>
                             <button type="submit" class="btn btn-primary mt-3">Log me in!</button>
                         </form>
-                        <form name="register-container" class="p-2 d-none">
+                        <form name="register-container" class="p-2 d-none" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="do what" value="register" />
                             <div class="form-group mt-1">
                                 <label for="exampleInputLogin1">Login</label>
-                                <input type="text" class="form-control" id="exampleInputLogin1" placeholder="Login" />
+                                <input type="text" class="form-control" id="exampleInputLogin1" name="username" placeholder="Login" />
                             </div>
                             <div class="form-group mt-3">
                                 <label for="exampleInputPassword1">Password</label>
-                                <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" />
+                                <input type="password" class="form-control" id="exampleInputPassword1" name="password1" placeholder="Password" />
+                            </div>
+                            <div class="form-group mt-3">
+                                <label for="exampleInputPassword2">Password</label>
+                                <input type="password" class="form-control" id="exampleInputPassword2" name="password2" placeholder="Repeat it" />
                             </div>
                             <div class="form-group mt-3">
                                 <label for="exampleInputEmail1">Email address</label>
-                                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" />
+                                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="email" placeholder="Enter email" />
                                 <small id="emailHelp" class="form-text text-muted">We won't share your e-mail with anyone else.</small>
                             </div>
                             <div class="form-check mt-3">
-                                <input type="checkbox" class="form-check-input" id="exampleCheck1" />
-                                <label class="form-check-label" for="exampleCheck1">I for one welcome our new overlords.</label>
+                                <input type="checkbox" class="form-check-input" id="exampleCheck1" required />
+                                <label class="form-check-label" for="exampleCheck1" name="cookies">I for one welcome our new overlords.</label>
                             </div>
                             <button type="submit" class="btn btn-primary mt-4">Register me!</button>
                         </form>
+                        {% endif %}
                     </div>
                 </div>
             </div>
