@@ -1,0 +1,11 @@
+// SCSS variable overrides (ie: new themes)
+
+
+// This includes all components of bootstrap and may be a bit fat.
+// It's okay while developing, but at some point we should slim this
+// down.
+// See: https://getbootstrap.com/docs/5.3/customize/sass/#importing
+// Also: https://getbootstrap.com/docs/5.3/customize/optimize/#lean-sass-imports
+@import "../bootstrap-5.3.0/scss/bootstrap.scss"
+
+// Any custom code:

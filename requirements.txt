@@ -1,0 +1,6 @@
+asgiref==3.6.0
+Django==4.2
+sqlparse==0.4.3
+libsass==0.22.0
+django-compressor==4.3.1
+django-sass-processor==1.2.2
