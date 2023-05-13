@@ -28,7 +28,7 @@ def create_superuser_forward(apps, schema_editor):
         admin.is_superuser = True
         admin.save()
         print(
-            f"\n\n  - Generated admin user 'admin' with password '{generated_password}")
+            f"\n\n  - Generated admin user 'admin' with password '{generated_password}'")
         print('  - Please change this password at your earliest convenience.\n\n')
     else:
         raise TypeError(

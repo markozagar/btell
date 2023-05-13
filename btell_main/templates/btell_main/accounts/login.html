@@ -1,0 +1,30 @@
+{% extends "btell_main/frame.html" %} {% block page_title %} Branching Stories - Log in {% endblock %} {% block main %}
+<main class="flex-shrink-0">
+    <div class="container">
+        {% if next %}
+        {% if user.is_authenticated %}
+        <p>Your account does not have access to this page.</p>
+        {% else %}
+        <p>This page is only visible to authenticated users.</p>
+        {% endif %}
+        {% endif %}
+
+        <form method="POST" action="{% url 'login' %}">
+            {% csrf_token %}
+            <table>
+                <tr>
+                    <td>{{ form.username.label_tag }}</td>
+                    <td>{{ form.username }}</td>
+                </tr>
+                <tr>
+                    <td>{{ form.password.label_tag }}</td>
+                    <td>{{ form.password }}</td>
+                </tr>
+            </table>
+
+            <input type="submit" value="login">
+            <input type="hidden" name="next" value="{{ next }}">
+        </form>
+    </div>
+</main>
+{% endblock %}
