@@ -8,7 +8,6 @@ from btell_main import models
 
 def context_add_user_info(request: http.HttpRequest, context: Dict[str, Any]):
     user = user_util.get_user_object(request)
-    print(f'User object from request: {user}')
     if user:
         profile = models.Profile.profile_from_user(user)
         full_name = f"{user.first_name} {user.last_name}".strip()
@@ -23,5 +22,4 @@ def context_add_user_info(request: http.HttpRequest, context: Dict[str, Any]):
     else:
         # Ensure that the user section of the context does not exist.
         if 'btell_user' in context:
-            print('Removing user from context')
             del context['btell_user']
