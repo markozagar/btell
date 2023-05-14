@@ -1,3 +1,7 @@
+.errorlist {
+    list-style-type: none;
+    color: red;
+}
 .errorlist.nonfield {
     list-style-type: none;
     color: red;

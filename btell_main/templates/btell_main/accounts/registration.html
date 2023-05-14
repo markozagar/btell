@@ -6,62 +6,59 @@
         {% else %}
         <form name="register-container" class="p-2" method="POST" action="{% url 'register' %}">
             {% csrf_token %}
-            <div class="form-group row mt-3 d-flex justify-content-center">
+            <div class="form-group row mt-3 d-flex flex-wrap justify-content-center mt-3">
                 <label class="col-sm-1 col-form-label">{{form.username.label}} </label>
                 <div class="col-sm-5">
                     <input type="text" class="form-control" id="id_username" name="username" placeholder="Username" required />
                 </div>
                 {% if form.errors and form.errors.username %}
-                <div class="">{{ form.errors.username }}</div>
+                <div class="d-flex flex-wrap justify-content-center mt-3">{{ form.errors.username }}</div>
                 {% endif %}
             </div>
-            <div class="form-group row mt-3 d-flex justify-content-center">
+            <div class="form-group row mt-3 d-flex flex-wrap justify-content-center mt-3">
                 <label class="col-sm-1 col-form-label">{{form.password1.label}} </label>
                 <div class="col-sm-5">
                     <input type="password" class="form-control" id="id_password1" name="password1" placeholder="Password" required />
                 </div>
                 {% if form.errors and form.errors.password1 %}
-                <div class="">{{ form.errors.password1 }}</div>
+                <div class="d-flex flex-wrap justify-content-center mt-3">{{ form.errors.password1 }}</div>
                 {% endif %}
             </div>
-            <div class="form-group row mt-3 d-flex justify-content-center">
+            <div class="form-group row mt-3 d-flex flex-wrap justify-content-center mt-3">
                 <label class="col-sm-2 col-form-label">{{form.password2.label}} </label>
                 <div class="col-sm-4">
                     <input type="password" class="form-control" id="id_password2" name="password2" placeholder="Password" required />
                 </div>
                 {% if form.errors and form.errors.password2 %}
-                <div class="">{{ form.errors.password2 }}</div>
+                <div class="d-flex flex-wrap justify-content-center mt-3">{{ form.errors.password2 }}</div>
                 {% endif %}
             </div>
-            <div class="form-group row mt-3 d-flex justify-content-center">
+            <div class="form-group row mt-3 d-flex flex-wrap justify-content-center mt-3">
                 <label class="col-sm-1 col-form-label">{{form.email.label}} </label>
                 <div class="col-sm-5">
                     <input type="email" class="form-control" id="id_email" name="email" placeholder="E-mail address" required />
                 </div>
                 {% if form.errors and form.errors.email %}
-                <div class="">{{ form.errors.email }}</div>
+                <div class="d-flex flex-wrap justify-content-center mt-3">{{ form.errors.email }}</div>
                 {% endif %}
             </div>
-            <div class="form-check mt-3 d-flex justify-content-center" style="gap: 13px">
+            <div class="form-check mt-3 d-flex flex-wrap justify-content-center mt-3" style="gap: 13px">
                 <input type="checkbox" class="form-check-input" id="tos" name="accepted_tos" required />
                 <label class="form-check-label">I accept the Terms of Use. </label>
                 {% if form.errors and form.errors.accepted_tos %}
-                <div class="">{{ form.errors.accepted_tos }}</div>
+                <div class="d-flex flex-wrap justify-content-center">{{ form.errors.accepted_tos }}</div>
                 {% endif %}
             </div>
-            <div class="form-check mt-3 d-flex justify-content-center" style="gap: 10px">
+            <div class="form-check mt-3 d-flex flex-wrap justify-content-center mt-3" style="gap: 10px">
                 <input type="checkbox" class="form-check-input" id="cookies" name="accepted_cookies" required />
                 <label class="form-check-label">I accept the Cookie Policy. </label>
                 {% if form.errors and form.errors.accepted_cookies %}
-                <div class="">{{ form.errors.accepted_cookies }}</div>
+                <div class="d-flex flex-wrap justify-content-center">{{ form.errors.accepted_cookies }}</div>
                 {% endif %}
             </div>
-            <div class="d-flex justify-content-center mt-3">
+            <div class="d-flex flex-wrap justify-content-center mt-3">
                 <button type="submit" class="btn btn-primary text-center" value="register">Register</button>
             </div>
-            <!-- {% if form.errors and form.non_field_errors %}
-            <div class="d-flex flex-wrap justify-content-center mt-3">{{ form.non_field_errors }}</div>
-            {% endif %} -->
         </form>
         {% endif %}
     </div>

@@ -1,32 +1,31 @@
 {% extends "btell_main/frame.html" %} {% block page_title %} Branching Stories - Log in {% endblock %} {% block main %}
 <main class="flex-shrink-0">
     <div class="container">
-        <!-- {% if next %} {% if user.is_authenticated %}
-        <h2 class="flex login-registration-style">Nice try, but you're already logged in.</h2>
-        <p>Your account does not have access to this page.</p>
-        {% else %}
-        <p>This page is only visible to authenticated users.</p>
-        {% endif %} {% endif %} -->
         {% if user.is_authenticated %}
         <h2 class="flex login-registration-style">Nice try, but you're already logged in.</h2>
         {% else %}
-        <!-- 
-            <form method="POST" action="{% url 'login' %}">
+        <form name="login-container" class="p-2" method="POST" action="{% url 'login' %}">
             {% csrf_token %}
-            <table>
-                <tr>
-                    <td>{{ form.username.label_tag }}</td>
-                    <td>{{ form.username }}</td>
-                </tr>
-                <tr>
-                    <td>{{ form.password.label_tag }}</td>
-                    <td>{{ form.password }}</td>
-                </tr>
-            </table> 
-            <input type="submit" value="login" /> 
-            <input type="hidden" name="next" value="{{ next }}" />
-            </form>
-        -->
+            <div class="form-group row mt-3 d-flex flex-wrap justify-content-center mt-3">
+                <label class="col-sm-1 col-form-label">{{form.username.label}}</label>
+                <div class="col-sm-5">
+                    <input type="text" class="form-control" id="id_username" name="username" placeholder="Username" />
+                </div>
+            </div>
+            <div class="form-group row mt-3 d-flex flex-wrap justify-content-center mt-3">
+                <label class="col-sm-1 col-form-label">{{form.password.label}}</label>
+                <div class="col-sm-5">
+                    <input type="password" class="form-control" id="id_password" name="password" placeholder="Password" />
+                </div>
+            </div>
+            <div class="d-flex flex-wrap justify-content-center mt-3 mt-3">
+                <button type="submit" class="btn btn-primary text-center" value="login">Login</button>
+            </div>
+            {% if form.errors and form.non_field_errors %}
+            <div class="d-flex flex-wrap justify-content-center mt-3">{{ form.non_field_errors }}</div>
+            {% endif %}
+        </form>
+        <!-- It's an alternate login form in a different style -->
         <!-- <form name="login-container" class="p-2" method="POST" action="{% url 'login' %}">
             {% csrf_token %}
             <div class="form-group mt-3">
@@ -39,27 +38,6 @@
             </div>
             <button type="submit" class="btn btn-primary mt-3" value="login">Login</button>
         </form> -->
-        <form name="login-container" class="p-2" method="POST" action="{% url 'login' %}">
-            {% csrf_token %}
-            <div class="form-group row mt-3 d-flex justify-content-center">
-                <label class="col-sm-1 col-form-label">{{form.username.label}}</label>
-                <div class="col-sm-5">
-                    <input type="text" class="form-control" id="id_username" name="username" placeholder="Username" />
-                </div>
-            </div>
-            <div class="form-group row mt-3 d-flex justify-content-center">
-                <label class="col-sm-1 col-form-label">{{form.password.label}}</label>
-                <div class="col-sm-5">
-                    <input type="password" class="form-control" id="id_password" name="password" placeholder="Password" />
-                </div>
-            </div>
-            <div class="d-flex justify-content-center mt-3">
-                <button type="submit" class="btn btn-primary text-center" value="login">Login</button>
-            </div>
-            {% if form.errors and form.non_field_errors %}
-            <div class="d-flex flex-wrap justify-content-center mt-3">{{ form.non_field_errors }}</div>
-            {% endif %}
-        </form>
         {% endif %}
     </div>
 </main>
