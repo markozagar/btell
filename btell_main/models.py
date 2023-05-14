@@ -74,8 +74,7 @@ class Comment(models.Model):
 class Story(models.Model):
     author = models.ForeignKey(auth_models.User, on_delete=models.CASCADE)
     title = models.CharField(max_length=200, null=False)
-    published = models.DateTimeField(
-        null=False, default=datetime.datetime.utcnow)
+    published = models.DateTimeField(null=True)  # If null, story is not published.
     last_update = models.DateTimeField(
         null=False, default=datetime.datetime.utcnow)
     # Cover image file will be a sha256 hash (hex) from a specified uploads directory.
@@ -88,3 +87,40 @@ class Story(models.Model):
     likes = models.PositiveIntegerField(default=0)
     dislikes = models.PositiveIntegerField(default=0)
     draft = models.BooleanField(default=True)
+
+    def is_published(self):
+        return self.published == None
+
+
+class Chapter(models.Model):
+    story = models.ForeignKey(Story, on_delete=models.CASCADE)
+    title = models.CharField(max_length=200, null=False)
+    # Simplified story markdown
+    content = models.TextField()
+    published = models.DateTimeField(null=True)  # If null, chapter is not published
+    last_update = models.DateTimeField(null=False, default=datetime.datetime.utcnow)
+    chapter_image = models.CharField(max_length=32, null=True)
+    chapter_image_source = models.CharField(max_length=500, null=True)
+
+
+class ChapterLink(models.Model):
+    story = models.ForeignKey(Story, on_delete=models.CASCADE)
+    from_chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE)
+    to_chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE, related_name='+')
+    text = models.CharField(max_length=50, null=False)
+    # Expressed with story DSL.
+    condition = models.CharField(max_length=500, null=True)
+    action = models.CharField(max_length=500, null=True)
+
+
+class StoryReader(models.Model):
+    user = models.ForeignKey(auth_models.User, on_delete=models.CASCADE)
+    story = models.ForeignKey(Story, on_delete=models.CASCADE)
+    current_chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE)
+    last_updated = models.DateTimeField(null=False, default=datetime.datetime.utcnow)
+
+
+class StoryReaderVars(models.Model):
+    reader = models.ForeignKey(StoryReader, on_delete=models.CASCADE)
+    variable_name = models.CharField(max_length=50, null=False)
+    variable_value = models.SmallIntegerField(null=False, default=0)
