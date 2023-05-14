@@ -88,8 +88,11 @@ class Story(models.Model):
     dislikes = models.PositiveIntegerField(default=0)
     draft = models.BooleanField(default=True)
 
+    def publish(self):
+        self.published = datetime.datetime.utcnow()
+
     def is_published(self):
-        return self.published == None
+        return self.published != None
 
 
 class Chapter(models.Model):
