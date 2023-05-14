@@ -1,3 +1,4 @@
+"""Administrative pages - django builtin."""
 from django.contrib import admin
 from btell_main import models
 

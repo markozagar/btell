@@ -141,3 +141,7 @@ SASS_OUTPUT_STYLE = 'compact'  # Smaller CSS size.
 MIN_PASSWORD_LENGTH = 8
 
 LOGIN_REDIRECT_URL = '/'
+
+# Specific settings for BTell
+
+BTELL_MAX_USERNAME_LENGTH = 30
