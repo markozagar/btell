@@ -1,0 +1,17 @@
+<div class="container m-2">Hello,
+    {% if btell_user.full_name %}
+    {{ btell_user.full_name }}!
+    {% else %}
+    {{ btell_user.username }}!
+    {% endif %}
+</div>
+<div class="container">
+    <div class="row p-2">
+        <form class="col-lg-6 pe-1 ps-0" method="POST" action="/a/logout/">
+            {% csrf_token %}
+            <button name="log-out-btn" class="w-100 btn btn-primary" type="submit">
+                Log out
+            </button>
+        </form>
+    </div>
+</div>
