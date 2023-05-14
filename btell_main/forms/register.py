@@ -1,21 +1,24 @@
-from django import shortcuts
-from django import urls
-from django import forms
+"""Registration form and view."""
+import logging
+
+from django import shortcuts, urls, forms, http
+from django.core import validators
 from django.contrib import auth
+from django.contrib.auth import password_validation
 from django.contrib.auth import models as auth_models
 from django.contrib.auth import forms as auth_forms
-from django.views.generic.edit import FormView
-from django.core.validators import validate_email
+from django.views.generic import edit
 
-# from datetime import datetime, timezone
+from btell import settings
 
 
-class Register_User(auth_forms.UserCreationForm):
+class RegisterUser(auth_forms.UserCreationForm):
+    """Registration form."""
     email = forms.EmailField(required=True, label='Email')
     accepted_cookies = forms.BooleanField(required=True, label='Cookies')
     accepted_tos = forms.BooleanField(required=True, label='ToS')
 
-    class Meta:
+    class Meta:  # pylint:disable=missing-class-docstring,too-few-public-methods
         model = auth_models.User
         fields = (
             'username',
@@ -29,96 +32,51 @@ class Register_User(auth_forms.UserCreationForm):
     def clean(self):
         data = self.cleaned_data
 
-        u1 = ""
+        provided_username = ""
         if 'username' in data:
-            u1 = str(data['username'])
+            provided_username = str(data['username'])
 
-        if u1 != "":
-            if len(u1) > 100:  # TODO Decide max username lenght
+        if provided_username != "":
+            if len(provided_username) > settings.BTELL_MAX_USERNAME_LENGTH:
                 self.add_error('username', "The name is too long. Max 100 marks.")
 
-            u_check = auth_models.User.objects.filter(username=u1)
+            u_check = auth_models.User.objects.filter(username=provided_username)
             if u_check.exists():
                 self.add_error('username', "Such Player already exists.")
 
-        e1 = ""
+        provided_email = ""
         if 'email' in data:
-            e1 = data['email']
+            provided_email = data['email']
 
-        if e1 != "":
-            if validate_email(e1) is not None:
+        if provided_email != "":
+            if validators.validate_email(provided_email) is not None:
                 self.add_error('email', "It's not in e-mail format.")
 
-            if len(e1) > 100:  # TODO Decide max e-mail lenght
-                self.add_error('email', "E-mail is too long. Max 100 marks.")
-
-            e_check = auth_models.User.objects.filter(email=e1)  # TODO If you want it
+            e_check = auth_models.User.objects.filter(email=provided_email)
             if e_check.exists():
                 self.add_error('email', "Email is already assigned to some account.")
 
-        p1 = ""
+        provided_password = ""
         if 'password1' in data:
-            p1 = data['password1']
+            provided_password = data['password1']
 
-        # if p1 != "":  # TODO Pick any password requirements you want
-        #     if len(p1) > 50:
-        #         self.add_error('password1', "The password is too long. Max 50 marks.")
-
-        #     if len(p1) < 8:
-        #         self.add_error('password1', "The password is too short.")
-
-        #     if not any(letter.isupper() for letter in p1):
-        #         self.add_error('password1', "The password needs an uppercase.")
-
-        #     if not any(letter.islower() for letter in p1):
-        #         self.add_error('password1', "The password needs a lowercase.")
-
-        #     if not any(letter.isdecimal() for letter in p1):
-        #         self.add_error('password1', "The password needs a number.")
-
-        #     if not any(not letter.isalnum() for letter in p1):
-        #         self.add_error('password1', "The password needs a special mark.")
-
-        # p2 = ""  # Solved by Django
-        # if 'password2' in data:
-        #     p2 = str(data['password2'])
-
-        # if p1 != p2:  # Solved by Django
-        #     self.add_error('password2', "Passwords are not identical.")
-
-        cook = False
-        if 'accepted_cookies' in data:
-            cook = data['accepted_cookies']
-
-        # if cook is not True:
-        #     self.add_error('accepted_cookies', "Cookies Policy not accepted.")
-
-        tos = False
-        if 'accepted_tos' in data:
-            tos = data['accepted_tos']
-
-        # if tos is not True:
-        #     self.add_error('accepted_tos', "Terms of Use not accepted.")
+        if password_validation.validate_password(provided_password):  # Will use password validation as configured in settings.py
+            self.add_error('password1', "The given password is not secure enough.")
+            password_hints = password_validation.password_validators_help_texts()
+            for hint in password_hints:
+                self.add_error('password1', hint)
 
         return data
 
-    # def save(self, commit=True):
-    #     user = super(Register_User, self).save(commit=False)
-    #     user.email = self.cleaned_data['email']
-    #     user.tos = self.cleaned_data['accepted_tos']
-    #     user.cookies = self.cleaned_data['accepted_cookies']
-    #     if commit:
-    #         user.save()
-    #     return user
 
-
-class RegisterPage(FormView):
+class RegisterPage(edit.FormView):
+    """Registration page."""
     template_name = 'btell_main/accounts/registration.html'
-    form_class = Register_User
+    form_class = RegisterUser
     redirect_authenticated_user = True
     success_url = urls.reverse_lazy('btell_index')
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs) -> http.HttpResponse:
         if self.request.user.is_authenticated:
             return shortcuts.redirect('btell_index')
         return super().get(request, *args, **kwargs)
@@ -127,16 +85,13 @@ class RegisterPage(FormView):
         context = super().get_context_data(**kwargs)
         return context
 
-    def form_invalid(self, form):
-        return super().form_invalid(form)
+    def form_valid(self, form: forms.ModelForm) -> http.HttpResponse:
+        form.save()
 
-    def form_valid(self, form):
-        # Registration
-        user = form.save()  # type: ignore # it works, but shows an error
-
-        # Profile manipulation if any should be here, or in the models
-
-        # Logging
+        # Automatically log the user in while we're at it.
         user = auth.authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password1'])
-        auth.login(self.request, user)
+        if isinstance(user, auth_models.User):
+            auth.login(self.request, user)
+        else:
+            logging.error("Incorrect User model: %s (or the user was not correctly registered)", type(user))
         return shortcuts.redirect('btell_index')

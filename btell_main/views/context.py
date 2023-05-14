@@ -1,12 +1,22 @@
-# Functions which help build out common parts of the context.
+"""Functions which help build out common parts of the context."""
 from typing import Dict, Any
 from django import http
-from django.contrib.auth import models as auth_models
 
 from btell_main.util import user_util
 from btell_main import models
 
+
 def context_add_user_info(request: http.HttpRequest, context: Dict[str, Any]):
+    """Appends information about the logged-in user to the given context.
+
+    This is used by some template fragments to display information about the
+    user account.
+
+    Args:
+        request: The current HttpRequest being processed. This is where the information
+          about the logged-in user will be retrieved.
+        context: A template rendering context being constructed.
+    """
     user = user_util.get_user_object(request)
     if user:
         profile = models.Profile.profile_from_user(user)

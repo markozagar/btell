@@ -1,3 +1,4 @@
+"""Utility functions for handling user objects."""
 import random
 import itertools
 import logging
@@ -5,8 +6,8 @@ import logging
 from typing import Optional
 
 from django import http
-from django.contrib import auth
 from django.contrib.auth import models as auth_models
+
 
 def generate_random_password(length: int) -> str:
     """Generates a random, secure password of the given length."""
@@ -42,7 +43,7 @@ def get_user_object(request: http.HttpRequest) -> Optional[auth_models.User]:
             user: auth_models.User = request.user
             return user
         else:
-            logging.warn("User model has the wrong type. Expected: '%s', found '%s'.",
-                         auth_models.User._meta.object_name,
-                         type(request.user))
+            logging.warning("User model has the wrong type. Expected: '%s', found '%s'.",
+                            auth_models.User._meta.object_name,  # pylint:disable=protected-access,no-member
+                            type(request.user))
         return None
