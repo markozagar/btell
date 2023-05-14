@@ -11,17 +11,16 @@
             <li class="nav-item"><a href="#" class="nav-link">Stories</a></li>
             <li class="nav-item"><a href="#" class="nav-link">About</a></li>
             {% if not btell_user %}
-            <li class="nav-item"><a href="/a/login/"><button class="btn btn-outline-primary me-2"
-                        type="button">Login</button></a>
+            <li class="nav-item">
+                <a href="{% url 'login' %}"><button class="btn btn-outline-primary me-2" type="button">Login</button></a>
             </li>
-            <li class="nav-item"><a href="#"><button class="btn btn-primary" type="button">Sign-up</button></a>
+            <li class="nav-item">
+                <a href="{% url 'register' %}"><button class="btn btn-primary" type="button">Sign-up</button></a>
             </li>
             {% else %}
             <form method="POST" action="/a/logout/">
                 {% csrf_token %}
-                <button name="log-out-btn" class="w-100 btn btn-outline-primary" type="submit">
-                    Log out
-                </button>
+                <button name="log-out-btn" class="w-100 btn btn-outline-primary" type="submit">Log out</button>
             </form>
             {% endif %}
         </ul>

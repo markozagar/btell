@@ -1,22 +1,18 @@
-{% load static %}
-{% load sass_tags %}
+{% load static %} {% load sass_tags %}
 
 <!DOCTYPE html>
 <html lang="en" class="h-100" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" context="width=device-width, initial-scale=1" />
+        <link href="{% sass_src 'btell_main/scss/bootstrap.scss' %}" rel="stylesheet" type="text/css" />
+        <link href="{% static 'btell_main/home_made_css.css' %}" rel="stylesheet" type="text/css" />
+        <script src="{% static 'btell_main/js/bootstrap.bundle.js' %}"></script>
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" context="width=device-width, initial-scale=1">
-    <link href="{% sass_src 'btell_main/scss/bootstrap.scss' %}" rel="stylesheet" type="text/css" />
-    <script src="{% static 'btell_main/js/bootstrap.bundle.js' %}"></script>
+        <title>{% block page_title %} BTell {% endblock %}</title>
+    </head>
 
-    <title>{% block page_title %} BTell {% endblock %}</title>
-</head>
-
-<body class="d-flex flex-column h-100">
-    {% block header %} {% include "btell_main/default_header.html" %} {% endblock %}
-    {% block main %} {% endblock %}
-    {% block footer %} {% include "btell_main/default_footer.html" %} {% endblock %}
-</body>
-
+    <body class="d-flex flex-column h-100">
+        {% block header %} {% include "btell_main/default_header.html" %} {% endblock %} {% block main %} {% endblock %} {% block footer %} {% include "btell_main/default_footer.html" %} {% endblock %}
+    </body>
 </html>
