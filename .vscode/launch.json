@@ -12,6 +12,16 @@
                 "runserver",
             ],
             "django": true
+        },
+        {
+            "name": "Python: Django Test",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/manage.py",
+            "args": [
+                "test"
+            ],
+            "django": true
         }
     ]
 }
