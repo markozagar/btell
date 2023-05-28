@@ -1,5 +1,5 @@
 """Functionality to parse and transform user-provided search filters so we can build a reasonable QuerySet for stories."""
-from typing import List, Optional
+from typing import ClassVar, Dict, List, Optional
 import dataclasses
 import enum
 
@@ -13,6 +13,50 @@ class StoryFilter:
     freeform: List[str] = dataclasses.field(default_factory=list)
     sortby: str = '-last_update'  # Default sorting is newest first.
     filter_error: Optional[str] = None
+    #
+    accepted_fields: ClassVar[Dict[str, str]] = {
+        "author": "author",
+        "tags": "tags",
+        "tag": "tags",
+    }
+
+    def add_filter(self, field: 'FilterToken', value: 'FilterToken'):
+        """Adds the specified field to the story filter.
+
+        Args:
+            field: The field we want to add. Must be a TokenType.FIELD and have
+                one of the known values.
+            value: The value we want to add, must be a TokenType.LITERAL.
+        
+        Raises:
+            SyntaxError: if the given tokens were incorrect types, or the field name is not known.
+        """
+        if not field.is_field():
+            raise SyntaxError("Expected a field name, but was given a literal value!")
+        if not value.is_literal():
+            raise SyntaxError("Expected a literal value for the field, but was given another field!")
+
+        # Some special values first
+        if field.contents == "is":
+            if value.contents == "completed":
+                self.completed = True
+                return
+            raise SyntaxError(f"Uknown predicate for `is`: {value.contents}")
+
+        if field.contents not in self.accepted_fields:
+            raise SyntaxError(f"Unknown field name: {field.contents}")
+
+        target_field = getattr(self, self.accepted_fields[field.contents])
+        if isinstance(target_field, List):
+            target_field.append(value.contents)
+        else:
+            setattr(self, self.accepted_fields[field.contents], value.contents)
+
+    def add_literal(self, literal: 'FilterToken'):
+        """Adds the specified literal value to the filter."""
+        if not literal.is_literal():
+            raise SyntaxError("Can't add a field name as a literal filter!")
+        self.freeform.append(literal.contents)
 
 
 class TokenType(enum.Enum):
@@ -36,6 +80,14 @@ class FilterToken:
     def field(field_name: str) -> 'FilterToken':
         """Creates a new field token."""
         return FilterToken(contents=field_name, type=TokenType.FIELD)
+
+    def is_literal(self) -> bool:
+        """Returns true of this token is a literal."""
+        return self.type == TokenType.LITERAL
+
+    def is_field(self) -> bool:
+        """Returns true if this token is a field."""
+        return self.type == TokenType.FIELD
 
     def __str__(self):
         if self.type == TokenType.LITERAL:
@@ -115,5 +167,24 @@ def prepare_stories_query(filter_str: Optional[str]) -> StoryFilter:
     #   - tag:a,b,c  # same as a above
     if not filter_str:
         return StoryFilter()  #  Basically everything
-    # TODO
-    return StoryFilter()
+    tokens = tokenize_query(filter_str)
+    ctoken = 0
+    query = StoryFilter()
+    while ctoken < len(tokens):
+        tok = tokens[ctoken]
+        if tok.is_field():
+            if ctoken + 1 == len(tokens):
+                query.filter_error = f"Field {tok.contents} specified without value!"
+                return query
+            next_token = tokens[ctoken + 1]
+            try:
+                query.add_filter(tok, next_token)
+            except SyntaxError as syntax_error:
+                query.filter_error = str(syntax_error)
+                return query
+            ctoken += 1
+        elif tok.is_literal():
+            query.add_literal(tok)
+        ctoken += 1
+
+    return query
