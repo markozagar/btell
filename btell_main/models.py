@@ -3,6 +3,7 @@ import datetime
 
 from django.db import models
 from django.db.models import signals
+from django.utils import timezone
 from django.contrib.auth import models as auth_models
 from django import dispatch
 
@@ -80,7 +81,7 @@ class Story(models.Model):
     title = models.CharField(max_length=200, null=False)
     published = models.DateTimeField(null=True)  # If null, story is not published.
     last_update = models.DateTimeField(
-        null=False, default=datetime.datetime.utcnow)
+        null=False, default=timezone.now)
     # Cover image file will be a sha256 hash (hex) from a specified uploads directory.
     cover_image_file = models.CharField(max_length=32, null=True)
     # A link to where the cover image is from, if applicable.
@@ -93,7 +94,7 @@ class Story(models.Model):
 
     def publish(self):
         """Publishes the story."""
-        self.published = datetime.datetime.utcnow()
+        self.published = datetime.datetime.now(tz=datetime.timezone.utc)
         self.save()
 
     def is_published(self):
